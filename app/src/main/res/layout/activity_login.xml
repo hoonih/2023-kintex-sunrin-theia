@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="카카오톡 로그인"
+                android:text="카카오톡계정으로 로그인"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/pretendard"
                 android:textFontWeight="500"
@@ -51,6 +51,11 @@
         </LinearLayout>
         
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
         
 
 </androidx.constraintlayout.widget.ConstraintLayout>

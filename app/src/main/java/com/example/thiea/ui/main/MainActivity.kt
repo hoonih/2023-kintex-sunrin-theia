@@ -7,10 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thiea.R
+import com.example.thiea.data.model.reversegeocode
 import com.example.thiea.databinding.ActivityMainBinding
+import com.example.thiea.remote.RetrofitClient
+import com.example.thiea.remote.service.ReversegeoService
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
@@ -24,6 +28,10 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
@@ -151,6 +159,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
         }
 
+
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -172,11 +181,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         naverMap.addOnLocationChangeListener {location ->
             userlocation = location
+
+
+            val reversgeoservice = RetrofitClient.getRetrofit().create(ReversegeoService::class.java)
+
+            val location = "${userlocation.longitude},${userlocation.latitude}"
+
+            reversgeoservice.getReversgeo(coords = location).enqueue(object : Callback<reversegeocode> {
+                override fun onResponse(
+                    call: Call<reversegeocode>,
+                    response: Response<reversegeocode>
+                ) {
+                    if (response.isSuccessful) {
+                        val myResponse = response.body()
+                        val area3Name = myResponse?.results?.get(0)?.region?.area3?.name
+                        if (area3Name != null) {
+                            binding.txRegionname.text = area3Name
+                        }
+                    } else {
+                        try { val body = response.errorBody()!!.string()
+
+                            Log.d("theia", "error - body : $body")
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<reversegeocode>, t: Throwable) {
+                    Log.d("theia", "API FAIL: ${call}")
+                }
+            })
         }
 
 
         naverMap.onMapClickListener =
             OnMapClickListener { coord: PointF?, point: LatLng? -> infoWindow.close() }
+
 
     }
 

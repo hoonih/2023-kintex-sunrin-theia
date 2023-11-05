@@ -6,13 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/ab_regionname"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="#000000"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tx_regionname"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="이태원로"
+            android:textSize="28sp"
+            android:fontFamily="@font/pretendard"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
     <com.naver.maps.map.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ab_regionname"
         app:layout_constraintBottom_toTopOf="@id/bnv_main"/>
 
     <LinearLayout
