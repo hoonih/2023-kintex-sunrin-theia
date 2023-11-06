@@ -16,6 +16,7 @@ import com.example.thiea.remote.service.LoginService
 import com.example.thiea.ui.SplashActivity
 import com.example.thiea.ui.login.fragment.CompleteFragment
 import com.example.thiea.ui.login.fragment.NameFragment
+import com.example.thiea.ui.main.MainActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.ClientError
@@ -90,6 +91,9 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful()) {
                     Log.d("theia", "나오지마")
                     logincomplete() // 나오면 안됨
+                    val intent = Intent(mContext, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
                 else {
                     try {

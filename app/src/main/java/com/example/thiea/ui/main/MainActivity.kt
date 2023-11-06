@@ -4,18 +4,20 @@ import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import com.example.thiea.R
+import com.example.thiea.data.model.Post
+import com.example.thiea.data.model.Postreq
+import com.example.thiea.data.model.PostsResponse
 import com.example.thiea.data.model.reversegeocode
 import com.example.thiea.databinding.ActivityMainBinding
 import com.example.thiea.remote.RetrofitClient
+import com.example.thiea.remote.service.PingService
 import com.example.thiea.remote.service.ReversegeoService
+import com.example.thiea.ui.main.dialog.EmotionDialogFragment
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
@@ -31,7 +33,10 @@ import com.naver.maps.map.util.FusedLocationSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.create
 import java.io.IOException
+import java.util.Timer
+import java.util.TimerTask
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
@@ -39,15 +44,88 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mapView : MapView
     private lateinit var naverMap: NaverMap
-    private lateinit var userlocation: Location
+    private var userlocation: Location? = null
 
     private var markerlist = mutableListOf<Marker>()
     private var markerloactionlist = mutableListOf<Location>()
+    private var emotion: Int = 0
+    private var posttext: String = ""
 
 
     val infoWindow = InfoWindow()
 
 
+    fun setemotion(emotionint : Int) {
+        emotion = emotionint
+    }
+    fun setposttext(postextstring : String) {
+        posttext = postextstring
+        postretrofit()
+    }
+    private fun postretrofit() {                                                     //핑을 찍기 위해 포스트를 한다
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
+        val userid = sp.getString("userId", null)
+        val postservice = RetrofitClient.getRetrofitmain().create(PingService::class.java)
+
+
+        val post = Postreq(userid.toString(), posttext, userlocation!!.latitude.toFloat(), userlocation!!.longitude.toFloat(), emotion)
+
+        postservice.pingcreate(post).enqueue(object : Callback<Post> {
+            override fun onResponse(call: Call<Post>, response: Response<Post>) {
+
+                if (response.isSuccessful) {
+                    val myResponse = response.body()
+                } else {
+                    try {
+                        val body = response.errorBody()!!.string()
+                        Log.d("theia", "error - body : $body, ${userid.toString()}")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                Log.d("theia", "API FAIL: ${call}")
+            }
+        })
+    }
+
+    private fun getPing(pinglatitude: Double, pinglongtitude: Double) {
+        val getping = RetrofitClient.getRetrofitmain().create(PingService::class.java)
+
+        getping.pingsearch(pinglatitude, pinglongtitude).enqueue(object : Callback<PostsResponse> {
+            override fun onResponse(call: Call<PostsResponse>, response: Response<PostsResponse>) {
+                if (response.isSuccessful) {
+                    val myResponse = response.body()?.posts
+                    Log.d("theia", "${response.body()?.posts}")
+                    myResponse?.forEach {
+                        pingcreate(it.text, it.sentiment, it.location.latitude, it.location.longitude)
+                    }
+                } else {
+                    try {
+                        val body = response.errorBody()!!.string()
+                        Log.d("theia", "error - body : $body")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<PostsResponse>, t: Throwable) {
+                Log.d("theia", "error - body : $call.")
+                Log.d("theia", "API FAIL: ${t.message}")
+                Log.d("theia","API FAIL: ${t.cause}")
+            }
+
+        })
+
+    }
+
+    fun bottomDialog(fragment: BottomSheetDialogFragment) {
+        val bottomSheet = fragment
+        bottomSheet.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
+        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+    }
 
     private fun snackbartoast(mess: String)
     {
@@ -58,22 +136,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         ).show()
     }
 
-    private fun pingcreate(inputtext: String) {
+    private fun pingcreate(inputtext: String, pingemo: Int, latitude: Double, longtitude: Double) {
         val newmarker: Marker = Marker()
-        markerlist.add(newmarker)
-        markerloactionlist.add(userlocation)
-        //pingspawn(inputtext)
-
-
         newmarker.setIconPerspectiveEnabled(true)
-        val lat = userlocation.latitude
-        val lng = userlocation.longitude // Corrected typo
-        newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_1))
+        when (pingemo) {
+            1 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_happy))
+            2 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_sad))
+            3 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_angry))
+            4 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_amaze))
+            else -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_tired))
+        }
         newmarker.setAlpha(0.8f)
-        newmarker.height = 50
+        newmarker.height = 100
         newmarker.tag = inputtext
-        newmarker.width = 50
-        newmarker.setPosition(LatLng(lat, lng))
+        newmarker.width = 100
+        newmarker.setPosition(LatLng(latitude, longtitude))
         newmarker.setMap(naverMap)
 
         newmarker.setOnClickListener { overlay ->
@@ -87,39 +164,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             infoWindow.open(newmarker)
             true
         }
-
-
     }
 
-    private fun pingspawn(inputtext: String) {
-        val infoWindow = InfoWindow()
 
-        markerlist.forEachIndexed { index, i ->
-            i.setIconPerspectiveEnabled(true)
-            val lat = markerloactionlist[index].latitude
-            val lng = markerloactionlist[index].longitude // Corrected typo
-            i.setIcon(OverlayImage.fromResource(R.drawable.ping_1))
-            i.setAlpha(0.8f)
-            i.height = 50
-            i.tag = inputtext
-            i.width = 50
-            i.setPosition(LatLng(lat, lng))
-            i.setMap(naverMap)
-
-            val markerTag = i.tag as String
-            i.setOnClickListener { overlay ->
-                // Set the content of the info window
-                infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this) {
-                    override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return markerTag
-                    }
-                }
-                // Open the info window above the marker
-                infoWindow.open(i)
-                true
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -137,20 +184,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         binding.btAdd.setOnClickListener {
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_dialog, null)
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            bottomDialog(EmotionDialogFragment())
 
-            val mAlertDialog = mBuilder.show()
-
-            val confirm = mDialogView.findViewById<Button>(R.id.bt_confirm)
-            confirm.setOnClickListener {
-
-                val inputText = mDialogView.findViewById<EditText>(R.id.et_write).text.toString()
-                pingcreate(inputText)
-
-                mAlertDialog.dismiss()
-            }
         }
         binding.btMy.setOnClickListener {
             snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
@@ -158,6 +193,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.btSearch.setOnClickListener {
             snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
         }
+        val timer = Timer()
+
+        val timerTask = object : TimerTask() {
+            override fun run() {
+                if (userlocation != null) {
+                    getPing(userlocation!!.latitude, userlocation!!.longitude)
+                    geocording()
+                }
+            }
+        }
+
+        timer.schedule(timerTask, 0, 5000)
 
 
     }
@@ -183,42 +230,44 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             userlocation = location
 
 
-            val reversgeoservice = RetrofitClient.getRetrofit().create(ReversegeoService::class.java)
-
-            val location = "${userlocation.longitude},${userlocation.latitude}"
-
-            reversgeoservice.getReversgeo(coords = location).enqueue(object : Callback<reversegeocode> {
-                override fun onResponse(
-                    call: Call<reversegeocode>,
-                    response: Response<reversegeocode>
-                ) {
-                    if (response.isSuccessful) {
-                        val myResponse = response.body()
-                        val area3Name = myResponse?.results?.get(0)?.region?.area3?.name
-                        if (area3Name != null) {
-                            binding.txRegionname.text = area3Name
-                        }
-                    } else {
-                        try { val body = response.errorBody()!!.string()
-
-                            Log.d("theia", "error - body : $body")
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<reversegeocode>, t: Throwable) {
-                    Log.d("theia", "API FAIL: ${call}")
-                }
-            })
         }
 
 
         naverMap.onMapClickListener =
             OnMapClickListener { coord: PointF?, point: LatLng? -> infoWindow.close() }
+    }
 
+    fun geocording() {
 
+        val reversgeoservice = RetrofitClient.getRetrofit().create(ReversegeoService::class.java)
+
+        val location = "${userlocation!!.longitude},${userlocation!!.latitude}"
+
+        reversgeoservice.getReversgeo(coords = location).enqueue(object : Callback<reversegeocode> {
+            override fun onResponse(
+                call: Call<reversegeocode>,
+                response: Response<reversegeocode>
+            ) {
+                if (response.isSuccessful) {
+                    val myResponse = response.body()
+                    val area3Name = myResponse?.results?.get(0)?.region?.area3?.name
+                    if (area3Name != null) {
+                        binding.txRegionname.text = area3Name
+                    }
+                } else {
+                    try { val body = response.errorBody()!!.string()
+
+                        Log.d("theia", "error - body : $body")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<reversegeocode>, t: Throwable) {
+                Log.d("theia", "API FAIL: ${call}")
+            }
+        })
     }
 
 }

@@ -6,6 +6,6 @@ data class User (
     val phone : String,
     val gender : String,
     val friends : Int = 0,
-    val posts : List<Post>,
+    var posts : List<Post>,
     val parties : Int = 0,
     )

@@ -20,6 +20,10 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        Log.d("Theia", "keyhash : ${Utility.getKeyHash(this)}")
+
+
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
         val userid = sp.getString("userId", null)
         if (userid == null) {
@@ -38,8 +42,6 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }, 3000)
         }
-
-
 
     }
 }
