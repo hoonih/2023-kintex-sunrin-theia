@@ -81,5 +81,8 @@ dependencies {
 
     //메테리얼
     implementation 'com.google.android.material:material:1.2.1'
+
+    //mypage 바텀바 애니메이션
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
     
 }
