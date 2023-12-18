@@ -1,5 +1,6 @@
 package com.example.thiea.remote
 
+import com.example.thiea.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -20,7 +21,7 @@ object RetrofitClient {
 
     private val retrofitBuilder2: Retrofit.Builder = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("http://218.144.111.204:2000/")
+        .baseUrl(BuildConfig.Base_URL)
 
     fun getRetrofit(): Retrofit {
         retrofitBuilder.client(clientBuilder.build())

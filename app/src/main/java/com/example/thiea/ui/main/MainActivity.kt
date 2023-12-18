@@ -1,5 +1,6 @@
 package com.example.thiea.ui.main
 
+import android.content.Intent
 import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.PingService
 import com.example.thiea.remote.service.ReversegeoService
 import com.example.thiea.ui.main.dialog.EmotionDialogFragment
+import com.example.thiea.ui.search_user.SearchActivity
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -191,7 +193,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
         }
         binding.btSearch.setOnClickListener {
-            snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
+            var intnet = Intent(this, SearchActivity::class.java)
+            startActivity(intnet)
         }
         val timer = Timer()
 

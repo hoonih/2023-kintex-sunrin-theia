@@ -24,7 +24,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+
         buildConfigField "String","NATIVE_APP_KEY",properties["NATIVE_APP_KEY"]
+        buildConfigField "String","Base_URL",properties["Base_URL"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -81,5 +83,9 @@ dependencies {
 
     //메테리얼
     implementation 'com.google.android.material:material:1.2.1'
+
+    //Glide
+    implementation "com.github.bumptech.glide:glide:4.12.0"
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     
 }
