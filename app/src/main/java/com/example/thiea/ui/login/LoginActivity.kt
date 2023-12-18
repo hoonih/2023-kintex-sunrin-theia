@@ -134,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
 
         val emptylist : List<Post> = listOf()
 
-        val theiauser = User(Userid, Username, UserPhone, UserGender, 0, emptylist, 0)
+        val theiauser = User(Userid, Username, UserPhone, UserGender)
 
         Log.d("theia", theiauser.toString())
 

@@ -10,7 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LoginService {
-    @GET("/user")
+    @GET("/get_user_profile")
     fun userregister(
         @Query("user_id") user_id: String
     ): Call<User>

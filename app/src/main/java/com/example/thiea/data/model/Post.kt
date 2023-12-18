@@ -1,6 +1,7 @@
 package com.example.thiea.data.model
 
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.Multipart
 
 data class Post (
     val post_id : Int,
