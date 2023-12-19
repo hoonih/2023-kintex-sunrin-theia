@@ -6,16 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.thiea.R
+import com.example.thiea.databinding.FragmentCompleteDialogBinding
 import com.example.thiea.databinding.FragmentEmotionDialogBinding
-import com.example.thiea.databinding.FragmentTextDialogBinding
-import com.example.thiea.ui.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class TextDialogFragment : BottomSheetDialogFragment() {
+class CompleteDialogFragment : BottomSheetDialogFragment() {
 
-    private var _binding : FragmentTextDialogBinding? = null
-    private val binding: FragmentTextDialogBinding
+    var _binding : FragmentCompleteDialogBinding? = null
+    private val binding: FragmentCompleteDialogBinding
         get() = requireNotNull(_binding) {"바인딩 객체가 생성되지 않았습니다."}
 
 
@@ -23,30 +22,26 @@ class TextDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentTextDialogBinding.inflate(inflater, container, false)
+        // Inflate the layout for this fragment
+        _binding = FragmentCompleteDialogBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btBack2.setOnClickListener {
-            (activity as MainActivity).bottomDialog(EmotionDialogFragment())
+        binding.btConfirm.setOnClickListener {
             dismiss()
         }
         binding.btBack.setOnClickListener {
             dismiss()
         }
-        binding.btConfirm.setOnClickListener {
-            (activity as MainActivity).setposttext(binding.etWrite.text.toString())
-            dismiss()
-        }
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
-
 }

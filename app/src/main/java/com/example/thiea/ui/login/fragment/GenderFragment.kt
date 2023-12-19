@@ -16,7 +16,6 @@ class GenderFragment : Fragment() {
     private val binding: FragmentGenderBinding
         get() = requireNotNull(_binding) {"바인딩 객체가 생성되지 않았습니다."}
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

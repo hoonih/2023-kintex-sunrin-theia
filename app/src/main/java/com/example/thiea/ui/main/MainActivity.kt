@@ -16,6 +16,7 @@ import com.example.thiea.databinding.ActivityMainBinding
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.PingService
 import com.example.thiea.remote.service.ReversegeoService
+import com.example.thiea.ui.main.dialog.CompleteDialogFragment
 import com.example.thiea.ui.main.dialog.EmotionDialogFragment
 import com.example.thiea.ui.search_user.SearchActivity
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
@@ -70,13 +71,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val postservice = RetrofitClient.getRetrofitmain().create(PingService::class.java)
 
 
-        val post = Postreq(userid.toString(), posttext, userlocation!!.latitude.toFloat(), userlocation!!.longitude.toFloat(), emotion)
+        val post = Postreq(userid.toString(), posttext, userlocation!!.latitude, userlocation!!.longitude, emotion)
+        Log.d("theia", "test : $post")
 
         postservice.pingcreate(post).enqueue(object : Callback<Post> {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
 
                 if (response.isSuccessful) {
                     val myResponse = response.body()
+                    bottomDialog(CompleteDialogFragment())
                 } else {
                     try {
                         val body = response.errorBody()!!.string()
@@ -153,6 +156,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         newmarker.tag = inputtext
         newmarker.width = 100
         newmarker.setPosition(LatLng(latitude, longtitude))
+        Log.d("theia", "${LatLng(latitude, longtitude)}")
         newmarker.setMap(naverMap)
 
         newmarker.setOnClickListener { overlay ->
@@ -231,8 +235,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         naverMap.addOnLocationChangeListener {location ->
             userlocation = location
-
-
         }
 
 
