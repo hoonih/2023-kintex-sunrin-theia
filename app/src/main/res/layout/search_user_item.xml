@@ -6,8 +6,8 @@
     android:gravity="center_vertical">
     <ImageView
         android:id="@+id/ic_profile"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
@@ -15,11 +15,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="14dp"
         android:text="닉네임"
         android:textSize="16sp"
-        android:fontFamily="@font/pretendard"
-        android:textColor="#4D4D4D"
+        android:fontFamily="@font/pretendardregular"
+        android:textColor="#FFFFFF"
         android:id="@+id/user_name"
         />
 

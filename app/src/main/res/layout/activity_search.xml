@@ -4,116 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".ui.search_user.SearchActivity">
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="유저"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:fontFamily="@font/pretendardsemi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/layout_title"
-        >
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="12dp"
+        />
 
-        <ImageView
-            android:id="@+id/ic_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/arrow_back"
-            android:layout_marginStart="16dp"
-            />
         <EditText
-            app:layout_constraintStart_toEndOf="@+id/ic_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:layout_marginTop="28dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bt_cancel"
+            android:layout_marginHorizontal="16dp"
+
+            android:layout_width="0dp"
+            android:layout_height="38dp"
             android:id="@+id/txt_search"
             android:hint="닉네임을 입력하세요"
             android:maxLines="1"
+            android:background="@drawable/et_search_box"
+
+            android:textColor="@color/white"
+            android:textColorHint="#D2D2D2"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendardregular"
+            android:drawableLeft="@drawable/ic_search_md"
+            android:drawablePadding="8dp"
+            android:paddingStart="8dp"
             />
-    </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/bt_cancel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/layout_title"
-        android:id="@+id/recycle_search"
+        android:text="취소"
+        android:textColor="@color/white"
+        android:fontFamily="@font/pretendardregular"
+        app:layout_constraintStart_toEndOf="@id/txt_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_marginTop="38.5dp"
+        android:layout_marginEnd="16dp"
         />
 
 
 
-    <LinearLayout
-        android:id="@+id/bnv_main"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/nv_maingradation"
-        >
-        <FrameLayout
-            android:id="@+id/bt_search"
-            android:layout_width="104dp"
-            android:layout_height="68dp"
-            android:layout_weight="1"
-            >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_search"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="검색"
-                android:textSize="12sp"
-                android:fontFamily="@font/pretendard"
-                android:textColor="#4D4D4D"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="48dp"/>
+        app:layout_constraintTop_toBottomOf="@id/txt_search"
+        tools:listitem="@layout/search_user_item"
+        tools:layout_editor_absoluteX="0dp" />
 
-        </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/bt_add"
-            android:layout_width="120dp"
-            android:layout_height="46dp"
-            android:background="@drawable/bt_add"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-
-            >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/bt_my"
-            android:layout_width="104dp"
-            android:layout_height="68dp"
-            android:layout_weight="1"
-            >
-            <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/im_teacher"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MY 테이아"
-                android:textSize="12sp"
-                android:fontFamily="@font/pretendard"
-                android:textColor="#4D4D4D"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="48dp"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

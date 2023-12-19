@@ -15,7 +15,7 @@ interface PingService {
         @Body post : Postreq
     ): Call<Post>
 
-    @GET("/nearby_posts/")
+    @GET("/nearby_pings/")
     fun pingsearch(
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double

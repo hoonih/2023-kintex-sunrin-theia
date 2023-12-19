@@ -11,17 +11,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thiea.R
 import com.example.thiea.data.model.userSearch
+import com.example.thiea.databinding.ActivitySearchBinding
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.SearchUserService
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySearchBinding
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btCancel.setOnClickListener {
+            finish()
+        }
+
         val Recyclerview = findViewById<RecyclerView>(R.id.recycle_search)
         Recyclerview.layoutManager = LinearLayoutManager(this)
         val User_id = findViewById<EditText>(R.id.txt_search)
+
         User_id.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
                 // 텍스트 변경 전에 호출되는 메서드
