@@ -98,7 +98,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getPing(pinglatitude: Double, pinglongtitude: Double) {
         val getping = RetrofitClient.getRetrofitmain().create(PingService::class.java)
 
-        getping.pingsearch(pinglatitude, pinglongtitude).enqueue(object : Callback<PostsResponse> {
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
+        val userid: String = sp.getString("userId", null).toString()
+
+        getping.pingsearch(userid, pinglatitude, pinglongtitude).enqueue(object : Callback<PostsResponse> {
             override fun onResponse(call: Call<PostsResponse>, response: Response<PostsResponse>) {
                 if (response.isSuccessful) {
                     val myResponse = response.body()?.posts

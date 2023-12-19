@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PingService {
@@ -15,8 +16,9 @@ interface PingService {
         @Body post : Postreq
     ): Call<Post>
 
-    @GET("/nearby_pings/")
+    @GET("/user/{uid}/nearby_pings/")
     fun pingsearch(
+        @Path("uid") uid: String,
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double
     ): Call<PostsResponse>
