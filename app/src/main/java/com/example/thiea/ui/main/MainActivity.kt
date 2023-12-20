@@ -65,7 +65,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         posttext = postextstring
         postretrofit()
     }
-    private fun postretrofit() {                                                     //핑을 찍기 위해 포스트를 한다
+    private fun postretrofit() {
+        //핑을 찍기 위해 포스트를 한다
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
         val userid = sp.getString("userId", null)
         val postservice = RetrofitClient.getRetrofitmain().create(PingService::class.java)
