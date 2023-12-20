@@ -1,11 +1,13 @@
 package com.example.thiea.ui.search_user
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
@@ -43,6 +45,15 @@ class RecyclerViewAdapter(private val context: Context, private val itemList: Li
             .override(200, 200)
             .transform(CenterCrop(), CircleCrop())
             .into(holder.userImage)
+
+        holder.itemView.setOnClickListener {
+            var intnet = Intent(context, SearchResultActivity::class.java)
+            intnet.putExtra("name", item.name)
+            intnet.putExtra("uid", item.uid)
+            intnet.putExtra("profileurl", item.profile_picture_url)
+
+            context.startActivity(intnet)
+        }
     }
 
     // getItemCount: 데이터 아이템의 총 개수 반환

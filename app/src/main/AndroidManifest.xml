@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.search_user.SearchResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.follow.FollowerListActivity"
             android:exported="false" />
         <activity
@@ -50,7 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">

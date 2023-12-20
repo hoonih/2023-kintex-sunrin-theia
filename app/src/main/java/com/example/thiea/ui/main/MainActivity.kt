@@ -33,10 +33,15 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.create
+import java.io.File
 import java.io.IOException
 import java.util.Timer
 import java.util.TimerTask
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var markerlist = mutableListOf<Marker>()
     private var markerloactionlist = mutableListOf<Location>()
     private var emotion: Int = 0
+    private lateinit var image: File
     private var posttext: String = ""
 
 
@@ -61,8 +67,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     fun setemotion(emotionint : Int) {
         emotion = emotionint
     }
-    fun setposttext(postextstring : String) {
+    fun setposttext(postextstring : String, upimage: File) {
         posttext = postextstring
+        image = upimage
         postretrofit()
     }
     private fun postretrofit() {
@@ -72,10 +79,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val postservice = RetrofitClient.getRetrofitmain().create(PingService::class.java)
 
 
-        val post = Postreq(userid.toString(), posttext, userlocation!!.latitude, userlocation!!.longitude, emotion)
-        Log.d("theia", "test : $post")
+        val file: File? = image// your file
+        val fileRequestBody = file?.let { RequestBody.create(okhttp3.MultipartBody.FORM, it) }
+        val filePart = fileRequestBody?.let { MultipartBody.Part.createFormData("file", file.name, it) }
 
-        postservice.pingcreate(post).enqueue(object : Callback<Post> {
+
+        postservice.pingcreate(userid.toString(), posttext, userlocation!!.latitude, userlocation!!.longitude, emotion, true, filePart).enqueue(object : Callback<Post> {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
 
                 if (response.isSuccessful) {
@@ -152,8 +161,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             1 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_happy))
             2 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_sad))
             3 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_angry))
-            4 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_amaze))
-            else -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_tired))
+            4 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_fear))
+            5 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_expect))
+            6 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_hate))
+            7 -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_trust))
+            else -> newmarker.setIcon(OverlayImage.fromResource(R.drawable.ping_amaze))
         }
         newmarker.setAlpha(0.8f)
         newmarker.height = 100

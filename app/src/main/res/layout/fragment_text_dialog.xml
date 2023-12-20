@@ -14,14 +14,6 @@
         tools:ignore="MissingConstraints"
         android:background="@drawable/bd_back">
 
-        <ImageView
-            android:id="@+id/bt_back2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_back2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="16dp"/>
 
         <ImageView
             android:id="@+id/bt_back"
@@ -35,12 +27,13 @@
             android:id="@+id/maintext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="글을 작성해주세요"
-            android:textSize="18sp"
-            android:fontFamily="@font/pretendard"
-            android:textColor="@color/white"
+            android:text="2023년 12월 28일"
+            android:textSize="13sp"
+            android:fontFamily="@font/pretendardregular"
+
+            android:textColor="#4D4D4D"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp"
             />
@@ -50,10 +43,10 @@
             android:id="@+id/bt_confirm"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:background="@drawable/bt_confirm"
-            android:text="다음 단계로"
+            android:background="@drawable/bt_confirmno"
+            android:text="완료"
             android:fontFamily="@font/pretendard"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,18 +57,19 @@
         <EditText
             android:id="@+id/et_write"
 
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/maintext"
             app:layout_constraintBottom_toTopOf="@id/bt_confirm"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bt_image"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="41dp"
             android:background="@drawable/et_dialog"
             android:hint="느꼈던 감정을 기록해보세요."
             android:textColor="@color/white"
-            android:textColorHint="#616161"
+            android:textColorHint="#808080"
             android:gravity="top"
             android:padding="16dp"
             android:textSize="13sp"
@@ -83,6 +77,16 @@
             android:textFontWeight="200"
 
             />
+        <ImageView
+            android:id="@+id/bt_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bt_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="16dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -9,7 +9,7 @@
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="294dp"
+        android:layout_height="375dp"
         tools:ignore="MissingConstraints"
         android:background="@drawable/bd_back">
 
@@ -30,13 +30,14 @@
             android:fontFamily="@font/pretendard"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="56dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             />
 
 
         <LinearLayout
+            android:id="@+id/ll1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -111,7 +112,118 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="화남"
+                    android:text="분노"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/pretendard"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="14sp"
+                    android:layout_marginTop="64dp"
+                    />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/ping_fear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/iv_fear"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_fear"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="공포"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/pretendard"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="64dp"
+                    />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ll1"
+            android:layout_marginTop="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_weight="1">
+            <FrameLayout
+                android:id="@+id/ping_expect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/iv_expect"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_expect"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="기대"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/pretendard"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="64dp"
+                    />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/ping_hate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/iv_hate"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_hate"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="혐오"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/pretendard"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="64dp"
+                    />
+            </FrameLayout>
+            <FrameLayout
+
+                android:id="@+id/ping_trust"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:id="@+id/iv_trust"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_trust"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="신뢰"
                     android:textColor="@color/white"
                     android:fontFamily="@font/pretendard"
                     android:layout_gravity="center_horizontal"
@@ -143,45 +255,23 @@
                     android:layout_marginTop="64dp"
                     />
             </FrameLayout>
-            <FrameLayout
-                android:id="@+id/ping_tired"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                >
-                <ImageView
-                    android:id="@+id/iv_tired"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ping_tired"
-                    android:layout_marginTop="8dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="지침"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/pretendard"
-                    android:textSize="14sp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="64dp"
-                    />
-            </FrameLayout>
+
         </LinearLayout>
+
         <Button
             android:id="@+id/bt_confirm"
             android:layout_width="match_parent"
             android:layout_height="41dp"
             android:background="@drawable/bt_confirmno"
-            android:text="다음 단계로"
+            android:text="다음"
             android:fontFamily="@font/pretendard"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
 
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll2"
+            android:layout_marginTop="49dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginHorizontal="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

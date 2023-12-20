@@ -56,24 +56,39 @@ class EmotionDialogFragment : BottomSheetDialogFragment() {
             emotionselected = 3
             select("angry")
         }
-        binding.pingAmaze.setOnClickListener {
+        binding.pingFear.setOnClickListener {
             emotionselected = 4
-            select("amaze")
+            select("fear")
         }
-        binding.pingTired.setOnClickListener {
+        binding.pingExpect.setOnClickListener {
             emotionselected = 5
-            select("tired")
+            select("expect")
+        }
+        binding.pingHate.setOnClickListener {
+            emotionselected = 6
+            select("hate")
+        }
+        binding.pingTrust.setOnClickListener {
+            emotionselected = 7
+            select("trust")
+        }
+        binding.pingAmaze.setOnClickListener {
+            emotionselected = 8
+            select("amaze")
         }
     }
 
     private fun select(selected: String) {
         nowselected = true
-        binding.btConfirm.setBackgroundResource(R.drawable.bt_register)
+        binding.btConfirm.setBackgroundResource(R.drawable.bt_confirm)
         binding.ivHappy.setImageResource(R.drawable.ping_happy)
         binding.ivSad.setImageResource(R.drawable.ping_sad)
         binding.ivAngry.setImageResource(R.drawable.ping_angry)
         binding.ivAmaze.setImageResource(R.drawable.ping_amaze)
-        binding.ivTired.setImageResource(R.drawable.ping_tired)
+        binding.ivFear.setImageResource(R.drawable.ping_fear)
+        binding.ivExpect.setImageResource(R.drawable.ping_expect)
+        binding.ivTrust.setImageResource(R.drawable.ping_trust)
+        binding.ivAmaze.setImageResource(R.drawable.ping_amaze)
         when(selected) {
             "happy" -> {
                 binding.ivHappy.setImageResource(R.drawable.ping_happy_check)
@@ -87,13 +102,25 @@ class EmotionDialogFragment : BottomSheetDialogFragment() {
                 binding.ivAngry.setImageResource(R.drawable.ping_angry_check)
                 (activity as MainActivity).setemotion(3)
             }
-            "amaze" -> {
-                binding.ivAmaze.setImageResource(R.drawable.ping_amaze_check)
+            "fear" -> {
+                binding.ivFear.setImageResource(R.drawable.ping_fear_check)
                 (activity as MainActivity).setemotion(4)
             }
-            else -> {
-                binding.ivTired.setImageResource(R.drawable.ping_tired_check)
+            "expect" -> {
+                binding.ivExpect.setImageResource(R.drawable.ping_expect_check)
                 (activity as MainActivity).setemotion(5)
+            }
+            "hate" -> {
+                binding.ivHate.setImageResource(R.drawable.ping_hate_check)
+                (activity as MainActivity).setemotion(6)
+            }
+            "trust" -> {
+                binding.ivTrust.setImageResource(R.drawable.ping_trust_check)
+                (activity as MainActivity).setemotion(7)
+            }
+            else -> {
+                binding.ivAmaze.setImageResource(R.drawable.ping_amaze_check)
+                (activity as MainActivity).setemotion(8)
             }
         }
     }
