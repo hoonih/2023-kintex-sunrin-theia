@@ -25,14 +25,14 @@
         android:textColor="#FFFFFF" />
 
     <Button
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:layout_width="65dp"
+        android:layout_height="45dp"
         android:textColor="@color/white"
         android:text="삭제"
         android:textSize="7dp"
         android:textStyle="bold"
         android:backgroundTint="#161616"
-        android:layout_marginStart="250dp"
+        android:layout_marginStart="200dp"
         android:id="@+id/btn_delete"/>
 
 </LinearLayout>
