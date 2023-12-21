@@ -125,6 +125,7 @@ class LoginActivity : AppCompatActivity() {
             val auto = getSharedPreferences("autoLogin", MODE_PRIVATE)
             val autoLoginEdit = auto.edit()
             autoLoginEdit.putString("userId", user!!.id.toString())
+            autoLoginEdit.putString("userName", user!!.kakaoAccount!!.profile!!.nickname.toString())
             autoLoginEdit.commit()
         }
     }

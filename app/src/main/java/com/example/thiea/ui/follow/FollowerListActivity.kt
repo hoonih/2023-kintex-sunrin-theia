@@ -10,9 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thiea.R
+import com.example.thiea.data.model.FollowerInfo
 import com.example.thiea.data.model.FollowingInfo
+import com.example.thiea.data.model.message
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.FollowListService
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Response
 
@@ -36,17 +39,48 @@ class FollowerListActivity : AppCompatActivity() {
         textFollower.setOnClickListener { onMenuSelected(it as TextView) }
         textFriends.setOnClickListener { onMenuSelected(it as TextView) }
         getFollowerList()
+        findViewById<TextView>(R.id.user_name).text = getSharedPreferences("autoLogin", MODE_PRIVATE).getString("userName", null)
     }
+    fun getFollowingList(){
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE)
+        val userid = sp.getString("userId", null)
+        val service = RetrofitClient.getRetrofitmain()
+        val call = service.create(FollowListService::class.java).requestFollowingList(userid!!)
+        call.enqueue(object : retrofit2.Callback<FollowingInfo>{ // 변경된 부분
+            override fun onResponse(call: Call<FollowingInfo>, response: Response<FollowingInfo>) { // 변경된 부분
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    Log.d("fortest", "팔로잉 리스트 성공$result")
+                    val adapter = MyAdapter(result) { uid ->
+                        // Handle item click here if needed
+                        unFollow(uid)
+                        Log.d("fotest", "언팔ㄱㄱ $uid")
+                    }
+                    // Assuming you have a RecyclerView with the id recyclerView
+                    val recyclerView: RecyclerView = findViewById(R.id.rv_follower)
+                    recyclerView.layoutManager = LinearLayoutManager(this@FollowerListActivity)
+                    recyclerView.adapter = adapter
+                } else {
+                    Log.d("fotest", "팔로워 리스트 실패"+response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<FollowingInfo>, t: Throwable) { // 변경된 부분
+                Log.d("fotest", "팔로워 리스트 실패"+t.message)
+            }
+        })
+    }
+
     fun getFollowerList() {
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE)
         val userid = sp.getString("userId", null)
             val service = RetrofitClient.getRetrofitmain()
-            val call = service.create(FollowListService::class.java).requestFollowList(userid!!)
-            call.enqueue(object : retrofit2.Callback<FollowingInfo>{ // 변경된 부분
-                override fun onResponse(call: Call<FollowingInfo>, response: Response<FollowingInfo>) { // 변경된 부분
+            val call = service.create(FollowListService::class.java).requestFollowerList(userid!!)
+            call.enqueue(object : retrofit2.Callback<FollowerInfo>{ // 변경된 부분
+                override fun onResponse(call: Call<FollowerInfo>, response: Response<FollowerInfo>) { // 변경된 부분
                     if (response.isSuccessful) {
                         val result = response.body()!!
-                        val adapter = MyAdapter(result) { uid ->
+                        val adapter = Follower_MyAdapter(this@FollowerListActivity, result) { uid ->
                             // Handle item click here if needed
                             Log.d("fotest", "언팔ㄱㄱ $uid")
                         }
@@ -60,12 +94,53 @@ class FollowerListActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<FollowingInfo>, t: Throwable) { // 변경된 부분
+                override fun onFailure(call: Call<FollowerInfo>, t: Throwable) { // 변경된 부분
                     Log.d("fotest", "팔로워 리스트 실패"+t.message)
                 }
             })
     }
+    fun getBFList() {
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE)
+        val userid = sp.getString("userId", null)
+        val service = RetrofitClient.getRetrofitmain()
+        val call = service.create(FollowListService::class.java).requestFollowerList(userid!!)
+        call.enqueue(object : retrofit2.Callback<FollowerInfo>{ // 변경된 부분
+            override fun onResponse(call: Call<FollowerInfo>, response: Response<FollowerInfo>) { // 변경된 부분
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    val adapter = Follower_MyAdapter(this@FollowerListActivity, result) { uid ->
+                        // Handle item click here if needed
+                        Log.d("fotest", "언팔ㄱㄱ $uid")
+                    }
+
+                    // Assuming you have a RecyclerView with the id recyclerView
+                    val recyclerView: RecyclerView = findViewById(R.id.rv_follower)
+                    recyclerView.layoutManager = LinearLayoutManager(this@FollowerListActivity)
+                    recyclerView.adapter = adapter
+                } else {
+                    Log.d("fotest", "팔로워 리스트 실패"+response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<FollowerInfo>, t: Throwable) { // 변경된 부분
+                Log.d("fotest", "팔로워 리스트 실패"+t.message)
+            }
+        })
+    }
     private fun onMenuSelected(selectedTextView: TextView) {
+        when (selectedTextView.id) {
+            R.id.textFollowing -> {
+                getFollowingList()
+            }
+
+            R.id.textFollower -> {
+                getFollowerList()
+            }
+//            R.id.textFriends -> {
+//                clearTextStyles()
+//                applySelectedTextStyle(selectedTextView)
+//            }
+        }
         // 모든 텍스트뷰의 텍스트 스타일 초기화
         textFollowing.setTypeface(null, Typeface.NORMAL)
         textFollower.setTypeface(null, Typeface.NORMAL)
@@ -91,8 +166,23 @@ class FollowerListActivity : AppCompatActivity() {
         textFriends.setTextColor(ColorStateList.valueOf(Color.parseColor("#4D4D4D")))
     }
 
-//    fun unFollow(uid:String){
-//        val call = RetrofitClient.getRetrofitmain().create(FollowListService::class.java).requestFollowList()
-//    }
+    fun unFollow(uid:String){
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE)
+        val userid = sp.getString("userId", null)
+        val call = RetrofitClient.getRetrofitmain().create(FollowListService::class.java).unfollow(userid.toString() ,uid)
+        call.enqueue(object : retrofit2.Callback<message> {
+            override fun onResponse(call: Call<message>, response: Response<message>) {
+                if (response.isSuccessful) {
+                    Log.d("fotest", "언팔 성공")
+                } else {
+                    Log.d("fotest", "언팔 실패"+response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<message>, t: Throwable) {
+                Log.d("fotest", "언팔 실패"+t.message)
+            }
+        })
+    }
 
 }

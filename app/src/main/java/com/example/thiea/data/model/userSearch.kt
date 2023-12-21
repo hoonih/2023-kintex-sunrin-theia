@@ -19,3 +19,11 @@ data class FollowingInfo(
     @SerializedName("following")
     val following : List<userSearch>
 )
+data class FollowerInfo(
+    @SerializedName("followers")
+    val following : List<userSearch>
+)
+data class message(
+    @SerializedName("message")
+    val message : String
+)

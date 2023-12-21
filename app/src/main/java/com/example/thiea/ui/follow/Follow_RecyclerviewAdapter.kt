@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -24,12 +23,8 @@ class MyAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context: Context = parent.context
         val inflater: LayoutInflater = LayoutInflater.from(context)
-
-        // Inflate the custom layout
-        val itemView: View = inflater.inflate(R.layout.follow_list_item, parent, false)
-
-        // Return a new holder instance
-        return ViewHolder(itemView)
+            val itemView: View = inflater.inflate(R.layout.follow_list_item, parent, false)
+            return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -62,9 +57,6 @@ class MyAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(R.id.user_name)
-        val imageView: ImageView = itemView.findViewById(R.id.ic_profile)
-        val del_btn: Button = itemView.findViewById(R.id.btn_delete)
     }
 }
 
