@@ -28,7 +28,7 @@ class MyPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        findViewById<TextView>(R.id.nb_follower).setOnClickListener{var intent = Intent(this, FollowerListActivity::class.java)
+        findViewById<TextView>(R.id.tx_follower).setOnClickListener{var intent = Intent(this, FollowerListActivity::class.java)
             startActivity(intent)}
         findViewById<TextView>(R.id.tx_follower).setOnClickListener{var intent = Intent(this, FollowerListActivity::class.java)
             startActivity(intent)}
