@@ -3,6 +3,8 @@ package com.example.thiea.ui.search_user
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -11,6 +13,7 @@ import com.example.thiea.BuildConfig
 import com.example.thiea.R
 import com.example.thiea.data.model.Post
 import com.example.thiea.data.model.User
+import com.example.thiea.data.model.message
 import com.example.thiea.data.model.recent
 import com.example.thiea.databinding.ActivitySearchBinding
 import com.example.thiea.databinding.ActivitySearchResultBinding
@@ -63,6 +66,29 @@ class SearchResultActivity : AppCompatActivity() {
                 Log.d("theia", "API FAIL: ${call}")
             }
         })
+        findViewById<LinearLayout>(R.id.bt_following).setOnClickListener{
+            val call = RetrofitClient.getRetrofitmain().create(FollowListService::class.java).follow(
+                getSharedPreferences("autoLogin", MODE_PRIVATE).getString("userId", null)!!,
+                intent.getStringExtra("uid").toString()
+            )
+            call.enqueue(object : Callback<message> {
+                override fun onResponse(
+                    call: Call<message>,
+                    response: Response<message>
+                ) {
+                    if (response.isSuccessful) {
+                        val result = response.body()!!
+                        Log.d("theia", "팔로우 성공$result")
+                    } else {
+                        Log.d("theia", "팔로우 실패"+response.message())
+                    }
+                }
+
+                override fun onFailure(call: Call<message>, t: Throwable) {
+                    Log.d("theia", "팔로우 실패"+t.message)
+                }
+            })
+        }
 
     }
 }

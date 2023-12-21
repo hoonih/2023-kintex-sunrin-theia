@@ -37,4 +37,10 @@ interface FollowListService {
     fun searchbyname(
         @Query("name") name: String,
     ): Call<User>
+
+    @POST("/follow/")
+    fun follow(
+        @Query("follower_id") user_id: String,
+        @Query("followed_id") followed_id: String,
+    ): Call<message>
 }
