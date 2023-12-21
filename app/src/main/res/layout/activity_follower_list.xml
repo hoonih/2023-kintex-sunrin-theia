@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.follow.FollowerListActivity">
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_name"
         android:layout_marginStart="16dp"
+        android:id="@+id/back_button"
         />
     <TextView
         android:layout_width="wrap_content"
