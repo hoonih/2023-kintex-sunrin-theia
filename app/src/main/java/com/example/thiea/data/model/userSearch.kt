@@ -26,3 +26,6 @@ data class FollowerInfo(
 data class is_following(
     val is_following : Boolean
 )
+data class message(
+    val message : String
+)

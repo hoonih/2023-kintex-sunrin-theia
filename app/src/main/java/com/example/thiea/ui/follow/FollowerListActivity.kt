@@ -1,11 +1,14 @@
 package com.example.thiea.ui.follow
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +18,7 @@ import com.example.thiea.data.model.FollowingInfo
 import com.example.thiea.data.model.message
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.FollowListService
+import com.example.thiea.ui.main.MainActivity
 import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Response
@@ -39,6 +43,10 @@ class FollowerListActivity : AppCompatActivity() {
         textFollower.setOnClickListener { onMenuSelected(it as TextView) }
         textFriends.setOnClickListener { onMenuSelected(it as TextView) }
         getFollowerList()
+        findViewById<ImageView>(R.id.back_button).setOnClickListener {
+            var intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         findViewById<TextView>(R.id.user_name).text = getSharedPreferences("autoLogin", MODE_PRIVATE).getString("userName", null)
     }
     fun getFollowingList(){

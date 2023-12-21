@@ -1,8 +1,10 @@
 package com.example.thiea.ui.mypage
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -14,6 +16,7 @@ import com.example.thiea.data.model.userSearch
 import com.example.thiea.databinding.ActivityMyPageBinding
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.SearchUserService
+import com.example.thiea.ui.follow.FollowerListActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +28,10 @@ class MyPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        findViewById<TextView>(R.id.nb_follower).setOnClickListener{var intent = Intent(this, FollowerListActivity::class.java)
+            startActivity(intent)}
+        findViewById<TextView>(R.id.tx_follower).setOnClickListener{var intent = Intent(this, FollowerListActivity::class.java)
+            startActivity(intent)}
 
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
         val userid = sp.getString("userId", null)
