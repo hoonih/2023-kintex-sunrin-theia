@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 import retrofit2.http.Multipart
 
 data class Post (
-    val post_id : Int,
     val author_uid : String,
-    val author : User,
     val text : String,
-    val title : String,
-    val location: Location,
+    val longitude: Double,
+    val latitude: Double,
+    val photo_url: String,
+    val for_close_friends: Boolean,
     val sentiment : Int,
     )
 

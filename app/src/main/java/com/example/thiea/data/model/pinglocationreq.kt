@@ -7,6 +7,8 @@ data class pinglocationreq (
     val longitude : Double,
 )
 class PostsResponse {
-    @SerializedName("posts")
+    @SerializedName("nearby_followed_posts")
     val posts: List<Post>? = null
+    @SerializedName("close_friends_posts")
+    val closeposts: List<Post>? = null
 }

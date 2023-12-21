@@ -1,5 +1,6 @@
 package com.example.thiea.ui.main
 
+import android.content.ClipDescription
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PointF
@@ -29,6 +30,7 @@ import com.example.thiea.remote.service.ReversegeoService
 import com.example.thiea.remote.service.SearchUserService
 import com.example.thiea.ui.main.dialog.CompleteDialogFragment
 import com.example.thiea.ui.main.dialog.EmotionDialogFragment
+import com.example.thiea.ui.main.dialog.PingDialogFragment
 import com.example.thiea.ui.mypage.MyPageActivity
 import com.example.thiea.ui.search_user.SearchActivity
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
@@ -72,6 +74,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var emotion: Int = 0
     private lateinit var image: File
     private var posttext: String = ""
+
+    private lateinit var description: String
+    private lateinit var imageurl: String
 
 
     val infoWindow = InfoWindow()
@@ -156,7 +161,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     val myResponse = response.body()?.posts
                     Log.d("theia", "${response.body()?.posts}")
                     myResponse?.forEach {
-                        pingcreate(it.text, it.sentiment, it.location.latitude, it.location.longitude)
+                        pingcreate(it.photo_url, it.text, it.sentiment, it.latitude, it.longitude)
                     }
                 } else {
                     try {
@@ -193,7 +198,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         ).show()
     }
 
-    private fun pingcreate(inputtext: String, pingemo: Int, latitude: Double, longtitude: Double) {
+    fun des() : String {
+        return description
+    }
+
+    fun url() : String {
+        return imageurl
+    }
+    private fun pingcreate(photo_url: String, inputtext: String, pingemo: Int, latitude: Double, longtitude: Double) {
         val newmarker: Marker = Marker()
         newmarker.setIconPerspectiveEnabled(true)
         when (pingemo) {
@@ -214,19 +226,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("theia", "${LatLng(latitude, longtitude)}")
         newmarker.setMap(naverMap)
 
-        newmarker.setOnClickListener { overlay ->
-            // Set the content of the info window
-            infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this) {
-                override fun getText(infoWindow: InfoWindow): CharSequence {
-                    return inputtext
-                }
-            }
-            // Open the info window above the marker
-            infoWindow.open(newmarker)
+        newmarker.setOnClickListener {
+            bottomDialog(PingDialogFragment())
+            description = inputtext
+            imageurl = photo_url
             true
-        }
-    }
 
+
+            //overlay ->
+//            // Set the content of the info window
+//            infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this) {
+//                override fun getText(infoWindow: InfoWindow): CharSequence {
+//                    return inputtext
+//                }
+//            }
+//            // Open the info window above the marker
+//            infoWindow.open(newmarker)
+//            true
+//        }
+        }
+
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
