@@ -93,10 +93,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 123
 
     private fun checkAndRequestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
                 READ_EXTERNAL_STORAGE_REQUEST_CODE
             )
         } else {

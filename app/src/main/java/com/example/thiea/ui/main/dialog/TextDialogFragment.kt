@@ -9,12 +9,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.RoundedCorner
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -48,7 +52,7 @@ class TextDialogFragment : BottomSheetDialogFragment() {
         const val PARAM_KEY_REVIEW = "review_content"
         const val PARAM_KEY_RATING = "rating"
     }
-    private val imageResult = registerForActivityResult(
+    private val imageResult: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         result ->
@@ -67,6 +71,16 @@ class TextDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+//    private val activityResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()){
+//        if(it.resultCode == AppCompatActivity.RESULT_OK && it.data != null){
+//            //값 담기
+//            uri = it.data!!.data
+//            Log.d("fotest","갓 받아온 경로"+uri.toString())
+//            view?.findViewById<ImageView>(R.id.img_upload)?.setImageURI(uri)
+//            path_img = (activity as MainActivity).getFilePathFromUri(uri.toString(), activity as MainActivity).toString()
+//        }
+
     fun getRealPathFromUri(uri: Uri): String {
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {
@@ -84,19 +98,14 @@ class TextDialogFragment : BottomSheetDialogFragment() {
         return result
     }
     private fun selectGallery() {
-        val writePermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val readPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        val readPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)
 
-        if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+        if (readPermission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE), REQ_GALLERY)
 
         } else {
             val intent = Intent(Intent.ACTION_PICK)
-            intent.setDataAndType(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*"
-            )
-
+            intent.type = "image/*"
             imageResult.launch(intent)
         }
     }
