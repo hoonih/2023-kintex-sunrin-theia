@@ -58,7 +58,7 @@
         android:id="@+id/nb_following"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="8"
+        android:text="0"
         android:textSize="12sp"
         android:fontFamily="@font/pretendardregular"
         android:textColor="@color/white"
@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text=" 이태원로"
+        android:text=" "
         app:layout_constraintStart_toEndOf="@id/tx_last_space"
         app:layout_constraintTop_toTopOf="@id/tx_last_space"
         app:layout_constraintBottom_toBottomOf="@id/tx_last_space"/>
@@ -154,7 +154,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text=" 슬픔"
+        android:text=" "
         app:layout_constraintStart_toEndOf="@id/tx_last_emotion"
         app:layout_constraintTop_toTopOf="@id/tx_last_emotion"
         app:layout_constraintBottom_toBottomOf="@id/tx_last_emotion"/>
@@ -176,19 +176,50 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user"/>
+            android:src="@drawable/ic_user_no"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="팔로우"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:fontFamily="@font/pretendardregular"
             android:layout_marginStart="8dp"/>
             />
     </LinearLayout>
-        
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/bt_friend"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="76dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/bt_following"
+        app:layout_constraintTop_toBottomOf="@id/tx_last_emotion"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_heart_no"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="친한친구"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendardregular"
+            android:layout_marginStart="8dp"/>
+        />
+    </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,6 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -19,7 +18,7 @@ import java.io.File
 
 interface PingService {
     @Multipart
-    @POST("/create_post")
+    @POST("/create_post/")
     fun pingcreate(
         @Query("author_uid") authorUid: String,
         @Query("text") text: String,
@@ -31,10 +30,4 @@ interface PingService {
     ): Call<Post> // Define PostResponse based on your JSON structure
 
 
-    @GET("/user/{uid}/nearby_pings/")
-    fun pingsearch(
-        @Path("uid") uid: String,
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double
-    ): Call<PostsResponse>
 }

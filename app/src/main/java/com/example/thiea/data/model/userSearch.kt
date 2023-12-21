@@ -27,3 +27,6 @@ data class FollowingInfo(
     @SerializedName("profile_picture_url")
     val profile_picture_url : String
 )
+data class is_following(
+    val is_following : Boolean
+)

@@ -1,23 +1,35 @@
 package com.example.thiea.ui.main
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.example.thiea.BuildConfig
 import com.example.thiea.R
 import com.example.thiea.data.model.Post
 import com.example.thiea.data.model.Postreq
 import com.example.thiea.data.model.PostsResponse
 import com.example.thiea.data.model.reversegeocode
+import com.example.thiea.data.model.userSearch
 import com.example.thiea.databinding.ActivityMainBinding
 import com.example.thiea.remote.RetrofitClient
 import com.example.thiea.remote.service.PingService
+import com.example.thiea.remote.service.PingnearService
 import com.example.thiea.remote.service.ReversegeoService
+import com.example.thiea.remote.service.SearchUserService
 import com.example.thiea.ui.main.dialog.CompleteDialogFragment
 import com.example.thiea.ui.main.dialog.EmotionDialogFragment
+import com.example.thiea.ui.mypage.MyPageActivity
 import com.example.thiea.ui.search_user.SearchActivity
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -37,6 +49,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,8 +83,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     fun setposttext(postextstring : String, upimage: File) {
         posttext = postextstring
         image = upimage
-        postretrofit()
+        checkAndRequestPermissions()
     }
+    private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 123
+
+    private fun checkAndRequestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                READ_EXTERNAL_STORAGE_REQUEST_CODE
+            )
+        } else {
+            // Permission already granted, proceed with your code
+            postretrofit()
+        }
+    }
+
     private fun postretrofit() {
         //핑을 찍기 위해 포스트를 한다
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
@@ -79,12 +107,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val postservice = RetrofitClient.getRetrofitmain().create(PingService::class.java)
 
 
-        val file: File? = image// your file
-        val fileRequestBody = file?.let { RequestBody.create(okhttp3.MultipartBody.FORM, it) }
-        val filePart = fileRequestBody?.let { MultipartBody.Part.createFormData("file", file.name, it) }
+//        // 게시글 데이터 준비
+//        val authorUid = RequestBody.create("text/plain".toMediaTypeOrNull(), userid.toString())
+//        val text = RequestBody.create("text/plain".toMediaTypeOrNull(), posttext)
+//        val latitude = RequestBody.create("text/plain".toMediaTypeOrNull(), userlocation!!.latitude.toString())
+//        val longitude = RequestBody.create("text/plain".toMediaTypeOrNull(), userlocation!!.longitude.toString())
+//        val sentiment = RequestBody.create("text/plain".toMediaTypeOrNull(), emotion.toString())
+//        val forCloseFriends = RequestBody.create("text/plain".toMediaTypeOrNull(), "true")
 
+// 파일 첨부
+        val file = image
+        val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        postservice.pingcreate(userid.toString(), posttext, userlocation!!.latitude, userlocation!!.longitude, emotion, true, filePart).enqueue(object : Callback<Post> {
+        Log.d("theia", "$body")
+
+        postservice.pingcreate(userid.toString(), posttext, userlocation!!.latitude, userlocation!!.longitude, emotion, true, body).enqueue(object : Callback<Post> {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
 
                 if (response.isSuccessful) {
@@ -101,12 +139,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             override fun onFailure(call: Call<Post>, t: Throwable) {
                 Log.d("theia", "API FAIL: ${call}")
+                t.printStackTrace()
             }
         })
     }
 
     private fun getPing(pinglatitude: Double, pinglongtitude: Double) {
-        val getping = RetrofitClient.getRetrofitmain().create(PingService::class.java)
+        val getping = RetrofitClient.getRetrofitmain().create(PingnearService::class.java)
 
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
         val userid: String = sp.getString("userId", null).toString()
@@ -197,6 +236,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
 
+        val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
+        val userid = sp.getString("userId", null)
+
+
+        val searchservie = RetrofitClient.getRetrofitmain().create(SearchUserService::class.java)
+
+        searchservie.usersearch(userid.toString()).enqueue(object :
+            Callback<userSearch> {
+            override fun onResponse(call: Call<userSearch>, response: Response<userSearch>) {
+                if (response.isSuccessful) {
+                    val myResponse = response.body()
+
+                    val glideUrl = GlideUrl(BuildConfig.Base_URL+ myResponse!!.profile_picture_url)
+
+                    Glide.with(this@MainActivity)
+                        .load(glideUrl)
+                        .override(200, 200)
+                        .transform(CenterCrop(), CircleCrop())
+                        .into(binding.igProfile)
+                } else {
+                    try {
+                        val body = response.errorBody()!!.string()
+                        Log.d("theia", "error - body : $body")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<userSearch>, t: Throwable) {
+                Log.d("theia", "API FAIL: ${call}")
+            }
+
+        })
+
+
         locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
         NaverMapSdk.getInstance(this).client =
             NaverMapSdk.NaverCloudPlatformClient("${NAVER_KEY}")
@@ -210,7 +285,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         binding.btMy.setOnClickListener {
-            snackbartoast("이 모드에선 지원되지 않는 기능입니다.")
+            var intnet = Intent(this, MyPageActivity::class.java)
+            startActivity(intnet)
         }
         binding.btSearch.setOnClickListener {
             var intnet = Intent(this, SearchActivity::class.java)
