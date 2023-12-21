@@ -37,6 +37,10 @@ class MyPageActivity : AppCompatActivity() {
         val userid = sp.getString("userId", null)
 
 
+        binding.txFollowing.setOnClickListener {
+
+        }
+
         val searchservie = RetrofitClient.getRetrofitmain().create(SearchUserService::class.java)
 
         searchservie.usersearch(userid.toString()).enqueue(object :

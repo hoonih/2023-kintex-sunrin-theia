@@ -1,11 +1,16 @@
 package com.example.thiea.ui.main
 
-import android.content.ClipDescription
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PointF
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.thiea.BuildConfig
 import com.example.thiea.R
 import com.example.thiea.data.model.Post
-import com.example.thiea.data.model.Postreq
 import com.example.thiea.data.model.PostsResponse
 import com.example.thiea.data.model.reversegeocode
 import com.example.thiea.data.model.userSearch
@@ -31,6 +35,7 @@ import com.example.thiea.remote.service.SearchUserService
 import com.example.thiea.ui.main.dialog.CompleteDialogFragment
 import com.example.thiea.ui.main.dialog.EmotionDialogFragment
 import com.example.thiea.ui.main.dialog.PingDialogFragment
+import com.example.thiea.ui.main.dialog.SearchDialogFragment
 import com.example.thiea.ui.mypage.MyPageActivity
 import com.example.thiea.ui.search_user.SearchActivity
 import com.example.thiea.ui.util.navermapkey.Companion.NAVER_KEY
@@ -47,33 +52,37 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 import java.io.File
 import java.io.IOException
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.math.sqrt
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener {
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var binding: ActivityMainBinding
     private lateinit var mapView : MapView
+    private lateinit var sensorManager: SensorManager
     private lateinit var naverMap: NaverMap
     private var userlocation: Location? = null
+    private var accel: Float = 0.0f
+    private var accelCurrent: Float = 0.0f
+    private var accelLast: Float = 0.0f
 
     private var markerlist = mutableListOf<Marker>()
     private var markerloactionlist = mutableListOf<Location>()
     private var emotion: Int = 0
     private lateinit var image: File
     private var posttext: String = ""
+
+    private var delay = false
 
     private lateinit var description: String
     private lateinit var imageurl: String
@@ -259,6 +268,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
         val userid = sp.getString("userId", null)
 
+        this.sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accel = 10f
+        accelCurrent = SensorManager.GRAVITY_EARTH
+        accelLast = SensorManager.GRAVITY_EARTH
 
         val searchservie = RetrofitClient.getRetrofitmain().create(SearchUserService::class.java)
 
@@ -312,22 +325,64 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             var intnet = Intent(this, SearchActivity::class.java)
             startActivity(intnet)
         }
-        val timer = Timer()
-
-        val timerTask = object : TimerTask() {
-            override fun run() {
-                if (userlocation != null) {
-                    getPing(userlocation!!.latitude, userlocation!!.longitude)
-                    geocording()
-                }
-            }
-        }
-
-        timer.schedule(timerTask, 0, 5000)
 
 
     }
 
+    private fun clearAllMarkers() {
+        markerlist.forEach { marker ->
+            marker.map = null
+        }
+        markerlist.clear()
+        markerloactionlist.clear()
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val x: Float = event?.values?.get(0) as Float
+        val y: Float = event?.values?.get(0) as Float
+        val z: Float = event?.values?.get(0) as Float
+
+        accelLast = accelCurrent
+        accelCurrent = sqrt((x*x + y*y + z*z).toDouble()).toFloat()
+
+        val delta: Float = accelCurrent - accelLast
+
+        accel = accel * 0.9f + delta
+
+        if (accel > 30) {
+            if (delay == false)
+            {
+                clearAllMarkers()
+                if (userlocation != null) {
+                    getPing(userlocation!!.latitude, userlocation!!.longitude)
+                    geocording()
+                }
+                bottomDialog(SearchDialogFragment())
+                delay = true
+                Handler().postDelayed(Runnable {
+                    delay = false
+                }, 3000) // 0.6초 정도 딜레이를 준 후 시작
+
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        Log.d("Theia", "run")
+    }
+
+    override fun onResume() {
+        sensorManager.registerListener(this, sensorManager
+            .getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            , SensorManager.SENSOR_DELAY_NORMAL
+        )
+        super.onResume()
+    }
+
+    override fun onPause() {
+        sensorManager.unregisterListener(this)
+        super.onPause()
+    }
     override fun onMapReady(map: NaverMap) {
 
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.main.dialog.SearchDialogFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        tools:ignore="MissingConstraints"
+        android:background="@drawable/bd_back">
+
+        <ImageView
+            android:id="@+id/bt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="16dp"/>
+
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/iv_happy"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_happy"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_sad"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:src="@drawable/ping_sad"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_angry"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:src="@drawable/ping_angry"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_fear"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:src="@drawable/ping_fear"
+                    android:layout_marginTop="8dp"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주변 감정들을 탐색하였습니다."
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/white"
+            android:fontFamily="@font/pretendardsemi"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/ll1"
+            app:layout_constraintBottom_toTopOf="@id/ll2"/>
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ll1"
+            android:layout_marginTop="56dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/iv_expect"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_expect"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_hate"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_hate"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_trust"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_trust"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+                <ImageView
+                    android:id="@+id/iv_amaze"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ping_amaze"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
