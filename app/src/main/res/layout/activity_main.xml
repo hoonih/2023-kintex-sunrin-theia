@@ -95,6 +95,7 @@
             android:layout_weight="1"
             >
             <ImageView
+                android:id="@+id/ig_profile"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:src="@drawable/im_teacher"

@@ -23,7 +23,6 @@ data class FollowerInfo(
     @SerializedName("followers")
     val following : List<userSearch>
 )
-data class message(
-    @SerializedName("message")
-    val message : String
+data class is_following(
+    val is_following : Boolean
 )
