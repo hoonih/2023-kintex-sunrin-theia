@@ -98,7 +98,7 @@ class TextDialogFragment : BottomSheetDialogFragment() {
         return result
     }
     private fun selectGallery() {
-        val readPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.READ_MEDIA_IMAGES)
+        val readPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE)
 
         if (readPermission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE), REQ_GALLERY)

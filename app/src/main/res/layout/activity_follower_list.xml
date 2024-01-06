@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".ui.follow.FollowerListActivity">
     <ImageView
         android:layout_width="20dp"
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="김테이"
         android:textSize="20dp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,6 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/white"
             android:text="팔로잉"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -52,6 +55,7 @@
         <TextView
             android:id="@+id/textFollower"
             android:layout_width="0dp"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="팔로우"
@@ -72,6 +76,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:clickable="true"
+            android:textColor="@color/white"
             android:focusable="true"
             android:onClick="onMenuSelected"/>
     </LinearLayout>
